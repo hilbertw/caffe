@@ -19,6 +19,8 @@
 
 #include "caffe/test/test_caffe_main.hpp"
 
+#include "debug.h"
+
 namespace caffe {
 
 template <typename Dtype>
@@ -542,15 +544,25 @@ void Net<Dtype>::AppendParam(const NetParameter& param, const int layer_id,
 
 template <typename Dtype>
 Dtype Net<Dtype>::ForwardFromTo(int start, int end) {
+
   CHECK_GE(start, 0);
   CHECK_LT(end, layers_.size());
   Dtype loss = 0;
+BEGIN_DEBUG
   for (int i = start; i <= end; ++i) {
     // LOG(ERROR) << "Forwarding " << layer_names_[i];
+    print_s(fp,layer_names_[i]);
+    
+    print_blobs(fp,"bottom_vecs_",bottom_vecs_[i]);
+    
+    print_blobs(fp,"top_vecs_ before:",top_vecs_[i]);
+    
     Dtype layer_loss = layers_[i]->Forward(bottom_vecs_[i], top_vecs_[i]);
+    print_blobs(fp,"top_vecs_ after:",top_vecs_[i]);
     loss += layer_loss;
     if (debug_info_) { ForwardDebugInfo(i); }
   }
+END_DEBUG
   return loss;
 }
 
