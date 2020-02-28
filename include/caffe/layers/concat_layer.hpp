@@ -27,7 +27,8 @@ class ConcatLayer : public Layer<Dtype> {
   virtual inline int MinBottomBlobs() const { return 1; }
   virtual inline int ExactNumTopBlobs() const { return 1; }
 
-HACK(ConcatLayer)
+#include "hack/ConcatLayer_print.h"
+#include "hack/ConcatLayer_dump.h"
 
  protected:
   /**

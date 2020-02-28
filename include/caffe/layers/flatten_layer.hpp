@@ -31,7 +31,8 @@ class FlattenLayer : public Layer<Dtype> {
   virtual inline int ExactNumBottomBlobs() const { return 1; }
   virtual inline int ExactNumTopBlobs() const { return 1; }
 
-HACK(FlattenLayer)
+#include "hack/FlattenLayer_print.h"
+#include "hack/FlattenLayer_dump.h"
  protected:
   /**
    * @param bottom input Blob vector (length 2+)

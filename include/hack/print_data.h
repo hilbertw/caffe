@@ -2,7 +2,8 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "caffe/caffe.hpp"
+#include <boost/property_tree/ptree.hpp>
+#include "caffe/data_transformer.hpp"
 
 template<typename Dtype> void print_blob_dtype(FILE*fp,const char *  comment, caffe::Blob<Dtype>& data);
 template<typename Dtype> void print_blob_dtype_data(FILE*fp,const char *  comment,caffe::Blob<Dtype>& data);
@@ -22,3 +23,19 @@ void print_vector_int_int_pair(FILE*fp,const char *comment,std::vector<std::pair
 void print_vector_int_int_pair_data(FILE*fp,const char * comment,std::vector<std::pair<int,int>>& m);
 void print_map_int_string(FILE*fp,const char *comment,std::map<int,std::string>& m);
 void print_map_int_string_data(FILE*fp,const char * comment,std::map<int,std::string>& m);
+
+void print(FILE*fp,const char * comment,int);
+void print(FILE*fp,const char * comment,float);
+void print(FILE*fp,const char * comment,double);
+void print(FILE*fp,const char * comment,bool);
+void print(FILE*fp,const char * comment,const caffe::ResizeParameter &);
+void print(FILE*fp,const char * comment,const boost::property_tree::ptree &);
+//void print(FILE*fp,const char * comment,const std::string &);
+//void print(FILE*fp,const char * comment,const std::vector<int> * const);
+//void print(FILE*fp,const char * comment,const std::vector<int> &);
+//template <typename Dtype>void print(FILE*fp,const char * comment,const caffe::Blob<Dtype>&);
+//template <typename Dtype>void print(FILE*fp,const char * comment,const boost::shared_ptr<caffe::DataTransformer<Dtype> >&);
+//void print(FILE*fp,const char * comment,const std::vector <std::string>&);
+//void print(FILE*fp,const char * comment,const std::vector <float>&);
+//void print(FILE*fp,const char * comment,const std::map <int,std::string>&);
+//void print(FILE*fp,const char * comment,const std::vector<std::pair<int, int> >&);

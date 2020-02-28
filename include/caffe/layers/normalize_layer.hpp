@@ -28,7 +28,8 @@ class NormalizeLayer : public Layer<Dtype> {
   virtual inline int ExactNumBottomBlobs() const { return 1; }
   virtual inline int ExactNumTopBlobs() const { return 1; }
 
-HACK(NormalizeLayer)
+#include "hack/NormalizeLayer_print.h"
+#include "hack/NormalizeLayer_dump.h"
  protected:
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);

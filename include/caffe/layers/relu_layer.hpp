@@ -29,7 +29,8 @@ class ReLULayer : public NeuronLayer<Dtype> {
 
   virtual inline const char* type() const { return "ReLU"; }
 
-HACK(ReLULayer)
+#include "hack/ReLULayer_print.h"
+#include "hack/ReLULayer_dump.h"
  protected:
   /**
    * @param bottom input Blob vector (length 1)
