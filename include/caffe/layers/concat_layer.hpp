@@ -27,6 +27,8 @@ class ConcatLayer : public Layer<Dtype> {
   virtual inline int MinBottomBlobs() const { return 1; }
   virtual inline int ExactNumTopBlobs() const { return 1; }
 
+HACK(ConcatLayer)
+
  protected:
   /**
    * @param bottom input Blob vector (length 2+)

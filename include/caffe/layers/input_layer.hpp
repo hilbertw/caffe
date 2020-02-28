@@ -32,6 +32,7 @@ class InputLayer : public Layer<Dtype> {
   virtual inline int ExactNumBottomBlobs() const { return 0; }
   virtual inline int MinTopBlobs() const { return 1; }
 
+HACK(InputLayer)
  protected:
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {}

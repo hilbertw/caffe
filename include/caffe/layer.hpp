@@ -10,6 +10,7 @@
 #include "caffe/layer_factory.hpp"
 #include "caffe/proto/caffe.pb.h"
 #include "caffe/util/math_functions.hpp"
+#include "hack/hack.h"
 
 /**
  Forward declare boost::thread instead of including boost/thread.hpp
@@ -316,6 +317,8 @@ class Layer {
     param_propagate_down_[param_id] = value;
   }
 
+virtual void print_data(const string & name)const{};
+virtual void dump(FILE *fp)const{};
 
  protected:
   /** The protobuf that stores the layer parameters */

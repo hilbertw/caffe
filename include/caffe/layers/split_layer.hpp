@@ -27,6 +27,7 @@ class SplitLayer : public Layer<Dtype> {
   virtual inline int ExactNumBottomBlobs() const { return 1; }
   virtual inline int MinTopBlobs() const { return 1; }
 
+HACK(SplitLayer)
  protected:
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);

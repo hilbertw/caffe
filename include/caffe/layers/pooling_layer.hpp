@@ -34,6 +34,7 @@ class PoolingLayer : public Layer<Dtype> {
             PoolingParameter_PoolMethod_MAX) ? 2 : 1;
   }
 
+HACK(PoolingLayer)
  protected:
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);

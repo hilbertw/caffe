@@ -41,6 +41,7 @@ class PriorBoxLayer : public Layer<Dtype> {
   virtual inline int ExactBottomBlobs() const { return 2; }
   virtual inline int ExactNumTopBlobs() const { return 1; }
 
+HACK(PriorBoxLayer)
  protected:
   /**
    * @brief Generates prior boxes for a layer with specified parameters.

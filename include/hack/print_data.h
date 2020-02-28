@@ -1,17 +1,24 @@
 #pragma once 
-template<> void print_blob_dtype<int>(FILE*fp,const char *  comment, caffe::Blob<int>& data);
-template<> void print_blob_dtype_data<int>(FILE*fp,const char *  comment,caffe::Blob<int>& data);
-template<> void print_blob_dtype<float>(FILE*fp,const char *  comment, caffe::Blob<float>& data);
-template<> void print_blob_dtype_data<float>(FILE*fp,const char *  comment,caffe::Blob<float>& data);
-template<> void print_blob_dtype_shape_data<int>(FILE*fp,const char *  comment, caffe::Blob<int>&data);
-template<> void print_blob_dtype_shape_data<float>(FILE*fp,const char *  comment, caffe::Blob<float>&data);
-void print_blob_int(FILE*fp,const char *  comment,caffe::Blob<int>& data);
-void print_blob_int_data(FILE*fp,const char *  comment,caffe::Blob<int>& data);
-void print_blob_int_shape_data(FILE*fp,const char *  comment,istd:vector<int>& data);
-void print_vector_float(FILE*fp,const char *  comment,std::vector<float>& data);
-void print_vector_float_data(FILE*fp,const char *  comment, std::vector<float>&data);
-void print_vector_int(FILE*fp,const char *  comment,std::vector<int>& data);
-void print_vector_int_data(FILE*fp,const char *  comment, std::vector<int>&data);
+#include <string>
+#include <map>
+#include <vector>
+#include "caffe/caffe.hpp"
+
+template<typename Dtype> void print_blob_dtype(FILE*fp,const char *  comment, caffe::Blob<Dtype>& data);
+template<typename Dtype> void print_blob_dtype_data(FILE*fp,const char *  comment,caffe::Blob<Dtype>& data);
+template<typename Dtype> void print_blob_dtype_shape_data(FILE*fp,const char *  comment, caffe::Blob<Dtype>&data);
+
+//template<typrname Dtype> void print_array(FILE*fp,const char *  comment,Dtype * data,int len);
+void print_array(FILE*fp,const char *  comment,int * data,int len);
+void print_array(FILE*fp,const char *  comment,float * data,int len);
+template<typename Dtype> void print_vector_dtype(FILE*fp,const char *  comment,std::vector<Dtype>& data);
+template<typename Dtype> void print_vector_dtype_data(FILE*fp,const char *  comment, std::vector<Dtype>&data);
+
 void print_transformer_param_data(FILE*fp,const char *  comment, caffe::TransformationParameter&data);
-void print_transformer_data(FILE*fp,const char *  comment, caffe::DataTransformer&data);
-void print_transformer(FILE*fp,const char *  comment, caffe::DataTransformer&data);
+void print_transformer_param(FILE*fp,const char *  comment, caffe::TransformationParameter&data);
+template<typename Dtype> void print_transformer_data(FILE*fp,const char *  comment, caffe::DataTransformer<Dtype>&data);
+template<typename Dtype> void print_transformer(FILE*fp,const char *  comment, caffe::DataTransformer<Dtype>&data);
+void print_vector_int_int_pair(FILE*fp,const char *comment,std::vector<std::pair<int,std::string>>& m);
+void print_vector_int_int_pair_data(FILE*fp,const char * comment,std::vector<std::pair<int,int>>& m);
+void print_map_int_string(FILE*fp,const char *comment,std::map<int,std::string>& m);
+void print_map_int_string_data(FILE*fp,const char * comment,std::map<int,std::string>& m);

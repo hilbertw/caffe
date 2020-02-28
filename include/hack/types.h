@@ -1,16 +1,22 @@
 #pragma once
-template <DType>
 struct shape_def 
 {
    int count;
    int * data;
 };
+template <typename Dtype>
+struct vector_dtype_def 
+{
+   int count;
+   Dtype * data;
+};
+template <typename Dtype>
 struct blob_dtype_def
 {
     struct shape_def shape;
     int count;
-    DType *data;
-    DType *diff;
+    Dtype *data;
+    Dtype *diff;
 };
 struct blob_int_def
 {
@@ -36,12 +42,12 @@ struct transformer_param_def
     bool force_gray;
     float scale;
 };
-template<typename DType>
+template<typename Dtype>
 struct data_transformer_def
 {
-    transformer_param_def param;
-    blob_dtype_def<DType> data_mean_;
-    vector_dtype<DType> mean_values;
+//    transformer_param_def param;
+    blob_dtype_def<Dtype> data_mean_;
+    vector_dtype_def<Dtype> mean_values;
 };
 struct int_string_pair
 {
@@ -81,5 +87,5 @@ struct vector_pair_int_int_def
 struct vector_string_def
 {
     int count;
-    vonst char * *data;
+    const char * *data;
 };

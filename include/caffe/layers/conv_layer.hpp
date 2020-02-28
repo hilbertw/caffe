@@ -66,6 +66,7 @@ class ConvolutionLayer : public BaseConvolutionLayer<Dtype> {
 
   virtual inline const char* type() const { return "Convolution"; }
 
+HACK(ConvolutionLayer)
  protected:
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);

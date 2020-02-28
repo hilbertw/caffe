@@ -43,7 +43,8 @@ class DetectionOutputLayer : public Layer<Dtype> {
   virtual inline int MaxBottomBlobs() const { return 4; }
   virtual inline int ExactNumTopBlobs() const { return 1; }
 
- protected:
+HACK(DetectionOutputLayer) 
+protected:
   /**
    * @brief Do non maximum suppression (nms) on prediction results.
    *

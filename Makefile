@@ -46,6 +46,7 @@ COMMON_FLAGS += -DCAFFE_VERSION=$(DYNAMIC_VERSION_MAJOR).$(DYNAMIC_VERSION_MINOR
 ##############################
 # CXX_SRCS are the source files excluding the test ones.
 CXX_SRCS := $(shell find src/$(PROJECT) ! -name "test_*.cpp" -name "*.cpp")
+CXX_SRCS += $(shell find src/hack ! -name "test_*.cpp" -name "*.cpp")
 # CU_SRCS are the cuda source files
 CU_SRCS := $(shell find src/$(PROJECT) ! -name "test_*.cu" -name "*.cu")
 # TEST_SRCS are the test source files
@@ -71,6 +72,7 @@ PROTO_BUILD_INCLUDE_DIR := $(BUILD_INCLUDE_DIR)/$(PROJECT)/proto
 # automatically (e.g., by proto).
 NONGEN_CXX_SRCS := $(shell find \
 	src/$(PROJECT) \
+	src/hack \
 	include/$(PROJECT) \
 	python/$(PROJECT) \
 	matlab/+$(PROJECT)/private \
