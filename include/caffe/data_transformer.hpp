@@ -11,6 +11,16 @@
 
 using google::protobuf::RepeatedPtrField;
 
+
+namespace caffe {
+template <typename Dtype>
+class DataTransformer;
+}
+
+template<typename Dtype_>
+void print_transformer(FILE*fp,const char *comment,const caffe::DataTransformer<Dtype_> &m);
+template<typename Dtype_>
+void print_transformer_data(FILE*fp,const char *comment,const caffe::DataTransformer<Dtype_> &m);
 namespace caffe {
 
 /**
@@ -247,6 +257,10 @@ class DataTransformer {
    */
   void Transform(const Datum& datum, Blob<Dtype>* transformed_blob,
                  NormalizedBBox* crop_bbox, bool* do_mirror);
+//template<typename Dtype_>
+   friend void print_transformer<>(FILE*fp,const char *comment,const DataTransformer<Dtype> &m);
+//template<typename Dtype_>
+   friend void print_transformer_data<>(FILE*fp,const char *comment,const DataTransformer<Dtype> &m);
 
   // Tranformation parameters
   TransformationParameter param_;
