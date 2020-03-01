@@ -29,7 +29,7 @@ template void dump_data(FILE*fp,const char * comment,const boost::shared_ptr<caf
 
 void dump_data(FILE *fp,int data){fprintf(fp,"%d",data);}
 void dump_data_int(FILE *fp,const char * comment,google::protobuf::uint32 data){fprintf(fp,"%s=%d",comment,data);}
-//void dump_data(FILE *fp,float data){fprintf(fp,"%lf",data);}
+void dump_data(FILE *fp,float data){fprintf(fp,"%lf",data);}
 void dump_data(FILE *fp,double data){fprintf(fp,"%lf",data);}
 void dump_data(FILE *fp,const std::pair<int,int>& data){fprintf(fp,"{%d,%d}",data.first,data.second);}
 void dump_data(FILE *fp,const std::string& data){fprintf(fp,"\"%s\"",data.c_str());}
@@ -40,6 +40,7 @@ void dump_data(FILE*fp,const char * comment,float data){fprintf(fp,"%s=%lf;\n",c
 void dump_data(FILE*fp,const char * comment,double data){fprintf(fp,"%s=%lf;\n",comment,data);}
 void dump_data(FILE*fp,const char * comment,bool data){fprintf(fp,"%s=%d;\n",comment,data);}
 void dump_data(FILE*fp,const char * comment,const char * data){fprintf(fp,"%s=\"%s\";\n",comment,data);}
+void dump_data(FILE*fp,const char * comment,const std::string &data){fprintf(fp,"%s=\"%s\";\n",comment,data.c_str());}
 
 template<typename Dtype>void dump_data_int_r(FILE *fp,const char * comment,const google::protobuf::RepeatedField< Dtype>& data)
 {
@@ -119,6 +120,20 @@ template <typename Dtype>void dump_data(FILE*fp,const char * comment,const std::
    fprintf(fp,"\n}");
 }
 
+
+template <typename Dtype>void dump_data(FILE*fp,const char * comment, std::vector <Dtype>&data)
+{
+   
+   fprintf(fp,"%s={\n",comment);
+   for(int i=0;i<data.size();i++)
+   {
+       if(i!=0) fprintf(fp,",");   
+       if((i%5)==0) fprintf(fp,"\n");
+        const Dtype & d=data[i];          
+       dump_data(fp,d);
+   }
+   fprintf(fp,"\n}");
+}
 void dump_data(FILE*fp,const char * comment,const std::vector<int> *data)
 {
     const std::vector<int>&d=*data;
@@ -140,16 +155,6 @@ void dump_data(FILE*fp,const char * comment,const std::map <int,std::string>&dat
 }
 
 
-template void dump_data(FILE*fp,const char * comment,const std::vector<std::pair<int, int> >&data);
-template void dump_data(FILE*fp,const char * comment,const std::vector<int >&data);
-template void dump_data(FILE*fp,const char * comment,const std::vector<float>&data);
-template void dump_data(FILE*fp,const char * comment,const std::vector<double>&data);
-template void dump_data(FILE*fp,const char * comment,const std::vector<std::string>&data);
-
-
-template void dump_data(FILE*fp,const char * comment,const caffe::Blob<float>& data);
-template void dump_data(FILE*fp,const char * comment,const caffe::Blob<int>& data);
-template void dump_data(FILE*fp,const char * comment,const caffe::Blob<double>& data);
 
 template<typename Dtype>  void dump_data(FILE*fp,const char * comment,const caffe::DataTransformer<Dtype> & data)
 {
@@ -164,4 +169,16 @@ template void dump_data<float>(FILE*fp,const char * comment,const caffe::DataTra
 template void dump_data<double>(FILE*fp,const char * comment,const caffe::DataTransformer<double> & data);
 template void dump_data<float>(FILE*fp,const char * comment,const boost::shared_ptr<caffe::DataTransformer<float> >& data);
 template void dump_data<double>(FILE*fp,const char * comment,const boost::shared_ptr<caffe::DataTransformer<double> >& data);
+template void dump_data<std::pair<int, int>>(FILE*fp,const char * comment,const std::vector<std::pair<int, int> >&data);
+template void dump_data<int>(FILE*fp,const char * comment,const std::vector<int >&data);
+template void dump_data<float>(FILE*fp,const char * comment,const std::vector<float>&data);
+template void dump_data<double>(FILE*fp,const char * comment,const std::vector<double>&data);
+template void dump_data<std::string>(FILE*fp,const char * comment,const std::vector<std::string>&data);
+template void dump_data<float>(FILE*fp,const char * comment,const caffe::Blob<float>& data);
+template void dump_data<int>(FILE*fp,const char * comment,const caffe::Blob<int>& data);
+template void dump_data<double>(FILE*fp,const char * comment,const caffe::Blob<double>& data);
+
+template void dump_data<int>(FILE*fp,const char * comment,std::vector<int >&data);
+template void dump_data<float>(FILE*fp,const char * comment,std::vector<float>&data);
+template void dump_data<double>(FILE*fp,const char * comment,std::vector<double>&data);
 

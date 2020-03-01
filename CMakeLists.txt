@@ -69,8 +69,8 @@ include_directories(BEFORE src) # This is needed for gtest.
 
 # ---[ Subdirectories
 add_subdirectory(src/gtest)
-add_subdirectory(src/caffe)
 add_subdirectory(src/hack)
+add_subdirectory(src/caffe)
 add_subdirectory(tools)
 add_subdirectory(examples)
 add_subdirectory(python)
