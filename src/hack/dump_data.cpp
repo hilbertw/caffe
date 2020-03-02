@@ -49,7 +49,7 @@ template<typename Dtype>void dump_data_int_r(FILE *fp,const char * comment,const
    {
        if(i!=0) fprintf(fp,",");   
        if((i%5)==0) fprintf(fp,"\n");          
-       dump_data(fp,data[i]);
+       dump_data(fp,data.Get(i));
    }
          
    fprintf(fp,"\n}\n");
