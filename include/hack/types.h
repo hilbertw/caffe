@@ -89,3 +89,19 @@ struct vector_string_def
     int count;
     const char * *data;
 };
+
+#deine P_FIELD(x) int x
+#defne P_FIELD_R(x) struct vector_int_def x
+#defne P_FIELD_R_F(x) struct vector_float_def x
+
+struct resie_param_def
+{
+   P_FIELD(height);
+   P_FIELD(width);
+   P_FIELD(height_scale);
+   P_FIELD(width_scale);
+   P_FIELD(resize_mode);
+   P_FIELD_R(interp_mode);
+   P_FIELD(pad_mode);
+   P_FIELD_R_F(pad_value);
+};

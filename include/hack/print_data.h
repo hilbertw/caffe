@@ -27,6 +27,8 @@ void print_map_int_string(FILE*fp,const char *comment,const std::map<int,std::st
 void print_map_int_string_data(FILE*fp,const char * comment,const std::map<int,std::string>& m);
 void print_vector_int_ptr(FILE*fp,const char *comment,const std::vector<int>* m);
 void print_vector_int_ptr_data(FILE*fp,const char * comment,const std::vector<int>* m);
+void print_resize_param_data(FILE*fp,const char * comment,const caffe::ResizeParameter & data);
+void print_resize_param(FILE*fp,const char * comment,const caffe::ResizeParameter & data);
 
 void print(FILE*fp,const char * comment,int);
 void print(FILE*fp,const char * comment,float);

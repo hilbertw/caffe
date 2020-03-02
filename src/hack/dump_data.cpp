@@ -42,13 +42,13 @@ void dump_data(FILE*fp,const char * comment,bool data){fprintf(fp,"%s=%d;\n",com
 void dump_data(FILE*fp,const char * comment,const char * data){fprintf(fp,"%s=\"%s\";\n",comment,data);}
 void dump_data(FILE*fp,const char * comment,const std::string &data){fprintf(fp,"%s=\"%s\";\n",comment,data.c_str());}
 
-template<typename Dtype>void dump_data_int_r(FILE *fp,const char * comment,const google::protobuf::RepeatedField< Dtype>& data)
+template<typename Dtype>void dump_data_r(FILE *fp,const char * comment,const google::protobuf::RepeatedField< Dtype>& data)
 {
    fprintf(fp,"%s={\n",comment);
    for(int i=0;i<data.size();i++)
    {
        if(i!=0) fprintf(fp,",");   
-       if((i%5)==0) fprintf(fp,"\n");          
+       if((i%5)==4) fprintf(fp,"\n");          
        dump_data(fp,data.Get(i));
    }
          
@@ -56,10 +56,10 @@ template<typename Dtype>void dump_data_int_r(FILE *fp,const char * comment,const
 }
 
 
-template<typename Dtype>void dump_data_r(FILE *fp,const char * comment,const google::protobuf::RepeatedField<int>& data);
-template<typename Dtype>void dump_data_r(FILE *fp,const char * comment,const google::protobuf::RepeatedField<float>& data);
+template void dump_data_r<int>(FILE *fp,const char * comment,const google::protobuf::RepeatedField<int>& data);
+template void dump_data_r<float>(FILE *fp,const char * comment,const google::protobuf::RepeatedField<float>& data);
 #define P_FIELD(x) dump_data_int(fp,#x,data.x())
-#define P_FIELD_R(x) dump_data_int_r(fp,#x,data.x())
+#define P_FIELD_R(x) dump_data_r(fp,#x,data.x())
 
 void dump_data(FILE*fp,const char * comment,const caffe::ResizeParameter & data)
 {
@@ -88,7 +88,7 @@ template <typename Dtype>void dump_array(FILE*fp,const char *  comment,const Dty
    for(int i=0;i<len;i++)
    {
        if(i!=0) fprintf(fp,",");   
-       if((i%5)==0) fprintf(fp,"\n");          
+       if((i%5)==4) fprintf(fp,"\n");          
        dump_data(fp,data[i]);
    }
    fprintf(fp,"\n}");
@@ -96,13 +96,17 @@ template <typename Dtype>void dump_array(FILE*fp,const char *  comment,const Dty
 
 template <typename Dtype>void dump_data(FILE*fp,const char * comment,const caffe::Blob<Dtype>& data)
 {
-   
-   fprintf(fp,"%s={\n",comment);
-   fprintf(fp,"count=%d\n",data.count());
-   dump_array(fp,"data",data.cpu_data(),data.count());
-   fprintf(fp,"\n");   
+  if(data.data_){  
+        fprintf(fp,"%s_data\n",comment);
+        fprintf(fp,"count=%d\n",data.count());
+        dump_array(fp,"data",data.cpu_data(),data.count());
+        fprintf(fp,"\n");   
+  }
+  if(data.diff_){  
+        fprintf(fp,"%s_diff\n",comment);
    dump_array(fp,"diff",data.cpu_diff(),data.count());   
    fprintf(fp,"\n}");
+  }
 }
 
 
@@ -113,7 +117,7 @@ template <typename Dtype>void dump_data(FILE*fp,const char * comment,const std::
    for(int i=0;i<data.size();i++)
    {
        if(i!=0) fprintf(fp,",");   
-       if((i%5)==0) fprintf(fp,"\n");
+       if((i%5)==4) fprintf(fp,"\n");
         const Dtype & d=data[i];          
        dump_data(fp,d);
    }
@@ -128,7 +132,7 @@ template <typename Dtype>void dump_data(FILE*fp,const char * comment, std::vecto
    for(int i=0;i<data.size();i++)
    {
        if(i!=0) fprintf(fp,",");   
-       if((i%5)==0) fprintf(fp,"\n");
+       if((i%5)==4) fprintf(fp,"\n");
         const Dtype & d=data[i];          
        dump_data(fp,d);
    }
@@ -147,7 +151,7 @@ void dump_data(FILE*fp,const char * comment,const std::map <int,std::string>&dat
    for(;iter!=data.end();iter++)
    {
        if(i!=0) fprintf(fp,",");   
-       if((i%5)==0) fprintf(fp,"\n");          
+       if((i%5)==4) fprintf(fp,"\n");          
        fprintf(fp,"{%d,\"%s\"}",iter->first,iter->second.c_str());
        i++;
    }

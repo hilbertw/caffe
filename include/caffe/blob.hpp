@@ -10,6 +10,14 @@
 #include "caffe/syncedmem.hpp"
 
 const int kMaxBlobAxes = 32;
+namespace caffe {
+template <typename Dtype>
+class Blob; 
+}
+
+template  <typename Dtype>void print_blob_dtype(FILE*fp,const char * comment,const caffe::Blob<Dtype>&);
+template  <typename Dtype>void print_blob_dtype_data(FILE*fp,const char * comment,const caffe::Blob<Dtype>&);
+template  <typename Dtype>void dump_data(FILE*fp,const char * comment,const caffe::Blob<Dtype>&);
 
 namespace caffe {
 
@@ -264,7 +272,9 @@ class Blob {
   void ShareDiff(const Blob& other);
 
   bool ShapeEquals(const BlobProto& other);
-
+   friend void print_blob_dtype<>(FILE*fp,const char * comment,const caffe::Blob<Dtype>&);
+   friend void print_blob_dtype_data<>(FILE*fp,const char * comment,const caffe::Blob<Dtype>&);
+   friend void dump_data<>(FILE*fp,const char * comment,const caffe::Blob<Dtype>&);
  protected:
   shared_ptr<SyncedMemory> data_;
   shared_ptr<SyncedMemory> diff_;
