@@ -21,8 +21,8 @@ template<typename Dtype> void print_transformer_data(FILE*fp,const char *  comme
 template<typename Dtype> void print_transformer(FILE*fp,const char *  comment, const caffe::DataTransformer<Dtype>&data);
 template<typename Dtype> void print_transformer(FILE*fp,const char *  comment, const boost::shared_ptr<caffe::DataTransformer<Dtype> >&data);
 template<typename Dtype> void print_transformer_data(FILE*fp,const char *  comment, const boost::shared_ptr<caffe::DataTransformer<Dtype> >&data);
-void print_vector_pair_int_int(FILE*fp,const char *comment,const std::vector<std::pair<int,int>>& m);
-void print_vector_pair_int_int_data(FILE*fp,const char * comment,const std::vector<std::pair<int,int>>& m);
+void print_vector_pair_int_int(FILE*fp,const char *comment,const std::vector<std::pair<int,int> >& m);
+void print_vector_pair_int_int_data(FILE*fp,const char * comment,const std::vector<std::pair<int,int> >& m);
 void print_map_int_string(FILE*fp,const char *comment,const std::map<int,std::string>& m);
 void print_map_int_string_data(FILE*fp,const char * comment,const std::map<int,std::string>& m);
 void print_vector_int_ptr(FILE*fp,const char *comment,const std::vector<int>* m);
