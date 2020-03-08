@@ -4,13 +4,12 @@
 	
 #include "caffe/caffe.hpp"
 #include "caffe/data_transformer.hpp"
-
 #include "hack/print_data.h"
 
 template<typename Dtype> void print_blob_dtype(FILE*fp,const char *  comment, const caffe::Blob<Dtype>& data)
 {
 	  int shape_len=data.shape().size();
-	  fprintf(fp,"{\n{%d,%s_shape},",shape_len,comment);
+	  fprintf(fp,"{\n{%d,%s_shape},%d,",shape_len,comment,data.count());
           if (data.data_)fprintf(fp," %s_data,",comment);else fprintf(fp,"NULL,"); 
           if (data.diff_)fprintf(fp,"%s_diff",comment); 
           fprintf(fp,"\n}");
@@ -23,10 +22,10 @@ void print_array(FILE*fp,const char *comment,const int * data,int count)
 	   for( ;i<count;i++) if(data[i]) break;
            if(i==count)
            {
-	       fprintf(fp,"int %s[%d];\n",comment,count);
+	       fprintf(fp,"static int %s[%d];\n",comment,count);
                return;
            }
-	   fprintf(fp,"int %s[]={\n",comment);
+	   fprintf(fp,"static int %s[]={\n",comment);
 	   for( i=0;i<count;i++)
 	   { 
 	      fprintf(fp,"%d,",data[i]);
@@ -40,10 +39,10 @@ void print_array(FILE*fp,const char *comment,const float * data,int count)
 	   for( ;i<count;i++) if(data[i]!=0) break;
            if(i==count)
            {
-	       fprintf(fp,"int %s[%d];\n",comment,count);
+	       fprintf(fp,"static float %s[%d];\n",comment,count);
                return;
            }
-	   fprintf(fp,"float %s[]={\n",comment);
+	   fprintf(fp,"static float %s[]={\n",comment);
 	   for( i=0;i<count;i++)
 	   { 
 	      fprintf(fp,"%lf,",data[i]);
@@ -58,10 +57,10 @@ void print_array(FILE*fp,const char *comment,const double * data,int count)
 	   for( ;i<count;i++) if(data[i]!=0) break;
            if(i==count)
            {
-	       fprintf(fp,"int %s[%d];\n",comment,count);
+	       fprintf(fp,"static double %s[%d];\n",comment,count);
                return;
            }
-	   fprintf(fp,"double %s[]={\n",comment);
+	   fprintf(fp,"static double %s[]={\n",comment);
 	   for( i=0;i<count;i++)
 	   { 
 	      fprintf(fp,"%lf,",data[i]);
@@ -161,7 +160,7 @@ template<typename Dtype> void print_transformer(FILE*fp,const char *  comment, c
 
 void print_map_int_string_data(FILE*fp,const char * comment, const std::map<int,std::string>& m)
 {
-	    fprintf(fp,"struct int_string_pair %s_data[]={\n",comment);
+	    fprintf(fp,"static struct int_string_pair %s_data[]={\n",comment);
 	   
 	    std::map<int,std::string>::const_iterator iter=m.begin(); 
 	    for(;iter!=m.end();iter++)
@@ -182,7 +181,7 @@ void print_map_int_string(FILE*fp,const char *comment, const std::map<int,std::s
 
 void print_vector_pair_int_int_data(FILE*fp,const char * comment, const std::vector<std::pair<int,int>>& m)
 {
-	    fprintf(fp,"struct int_string_pair %s_data[]={\n",comment);
+	    fprintf(fp,"static struct int_int_pair %s_data[]={\n",comment);
 	    
 	    for(int i=0;i<m.size();i++)
 	    {
@@ -214,13 +213,13 @@ void print(FILE*fp,const char * comment,double data)
 }
 void print(FILE*fp,const char * comment,bool data)
 {
-	  fprintf(fp,"%d /*%s*/",data,comment);
+	  fprintf(fp,"%s /*%s*/",data?"true":"false",comment);
 }
 void print(FILE* fp, const  float& data){ fprintf(fp,"%lf",data);}
 void print(FILE* fp, const  int& data){ fprintf(fp,"%d",data);}
-template<typename Dtype>void print_data_r(FILE *fp,const char * comment,const google::protobuf::RepeatedField< Dtype>& data)
+void print_data_r(FILE *fp,const char * comment,const google::protobuf::RepeatedField<int>& data)
 {
-   fprintf(fp,"%s={/\n",comment);
+   fprintf(fp,"static int %s[] ={\n",comment);
    for(int i=0;i<data.size();i++)
    {
        if(i!=0) fprintf(fp,",");
@@ -228,12 +227,22 @@ template<typename Dtype>void print_data_r(FILE *fp,const char * comment,const go
        print(fp,data.Get(i));
    }
 
-   fprintf(fp,"\n}\n");
+   fprintf(fp,"\n};\n");
+}
+void print_data_r(FILE *fp,const char * comment,const google::protobuf::RepeatedField<float>& data)
+{
+   fprintf(fp,"static float %s[] ={\n",comment);
+   for(int i=0;i<data.size();i++)
+   {
+       if(i!=0) fprintf(fp,",");
+       if((i%5)==4) fprintf(fp,"\n");
+       print(fp,data.Get(i));
+   }
+
+   fprintf(fp,"\n};\n");
 }
 void print(FILE *fp,const char * comment,google::protobuf::uint32 data){fprintf(fp,"%d /*%s*/",data,comment);}
 
-template void print_data_r<int>(FILE *fp,const char * comment,const google::protobuf::RepeatedField<int>& data);
-template void print_data_r<float>(FILE *fp,const char * comment,const google::protobuf::RepeatedField<float>& data);
 #define P_FIELD_R_DATA(x) { std::string s=std::string(comment)+std::string("_" #x "_data");print_data_r(fp,s.c_str(),data.x());}
 
 #define P_FIELD(x) {print(fp,#x,data.x());fprintf(fp,",\n");}
@@ -260,6 +269,8 @@ void print(FILE*fp,const char * comment,const caffe::ResizeParameter &data)
 }
 void print(FILE*fp,const char * comment,const boost::property_tree::ptree &data)
 {
+   fprintf(fp,"{}/*%s*/\n",comment);
+   
 }
 
 void print_vector_int_ptr(FILE*fp,const char *comment, const std::vector<int>* m)
@@ -279,7 +290,7 @@ void print_vector_string(FILE*fp,const char * comment,const std::vector<std::str
 }
 void print_vector_string_data(FILE*fp,const char * comment,const std::vector<std::string> &data)
 {
-     fprintf(fp,"const char *%s_data[]={\n",comment);
+     fprintf(fp,"static const char *%s_data[]={\n",comment);
      for(int i=0;i< data.size();i++)
      {
        if(i!=0) fprintf(fp,",");
@@ -292,26 +303,33 @@ void print_vector_string_data(FILE*fp,const char * comment,const std::vector<std
 
 template<typename Dtype> void print_transformer(FILE*fp,const char *  comment, const boost::shared_ptr<caffe::DataTransformer<Dtype> >&data)
 {
-      if(data!=0){
+       if(data)
+       {
          const caffe::DataTransformer<Dtype> &d=*data;
          print_transformer(fp,comment,d);
-      }
+       }
+      else fprintf(fp,"{}/*%s*/",comment);
 }
-template<typename Dtype> void print_transformer_data(FILE*fp,const char *  comment, const boost::shared_ptr<caffe::DataTransformer<Dtype> >&data){
-      if(data!=0){
-       const caffe::DataTransformer<Dtype> &d=*data;
-       print_transformer_data(fp,comment,d);
-      }
+template<typename Dtype> void print_transformer_data(FILE*fp,const char *  comment, const boost::shared_ptr<caffe::DataTransformer<Dtype> >&data)
+{
+       if(data)
+       {
+           const caffe::DataTransformer<Dtype> &d=*data;
+           print_transformer_data(fp,comment,d);
+       }
 }
 void print(FILE*fp,const char * comment,const std::string &data)
 {
-       fprintf(fp,"\"%s\"",data.c_str());
+       fprintf(fp,"\"%s\" /*%s*/",data.c_str(),comment);
 }
-template<typename Dtype>
-void print(FILE*fp, const char*comment, const boost::shared_ptr<caffe::DataTransformer<Dtype> >&data) 
+template<typename Dtype> void print(FILE*fp, const char*comment, const boost::shared_ptr<caffe::DataTransformer<Dtype> >&data) 
 {
-       const caffe::DataTransformer<Dtype> &d=*data;
-       print_transformer<Dtype>(fp,comment,d);
+       if(data)
+       {
+         const caffe::DataTransformer<Dtype> &d=*data;
+         print_transformer<Dtype>(fp,comment,d);
+       }
+      else fprintf(fp,"{}/*%s*/",comment);
 }
 
 template void print_blob_dtype<int>(FILE*fp,const char *  comment, const caffe::Blob<int>& data);
@@ -343,7 +361,9 @@ template void print_blob_dtype_shape_data<double>(FILE*fp,const char *  comment,
  
 template void print_vector_dtype<double>(FILE*fp,const char *  comment,const std::vector<double>& data);
 template void print_vector_dtype_data<double>(FILE*fp,const char *  comment, const std::vector<double>&data);
+
+template void print<float>(FILE*fp, const char*comment, const boost::shared_ptr<caffe::DataTransformer<float> >&data); 
+template void print<double>(FILE*fp, const char*comment, const boost::shared_ptr<caffe::DataTransformer<double> >&data); 
  
-//templateoid print<double>(FILE*fp,const char * comment,const boost::shared_ptr<caffe::DataTransformer<double> >&);
 
 

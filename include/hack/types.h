@@ -1,4 +1,10 @@
 #pragma once
+#include <boost/property_tree/ptree.hpp>
+#include "caffe/caffe.hpp"
+#include "caffe/util/bbox_util.hpp"
+
+typedef float _Dtype_;
+
 struct shape_def 
 {
    int count;
@@ -90,11 +96,11 @@ struct vector_string_def
     const char * *data;
 };
 
-#deine P_FIELD(x) int x
-#defne P_FIELD_R(x) struct vector_int_def x
-#defne P_FIELD_R_F(x) struct vector_float_def x
+#define P_FIELD(x) int x
+#define P_FIELD_R(x) struct vector_int_def x
+#define P_FIELD_R_F(x) struct vector_float_def x
 
-struct resie_param_def
+struct resize_param_def
 {
    P_FIELD(height);
    P_FIELD(width);
