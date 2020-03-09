@@ -22,7 +22,9 @@ void print_array(FILE*fp,const char *comment,const int * data,int count)
 	   for( ;i<count;i++) if(data[i]) break;
            if(i==count)
            {
-	       fprintf(fp,"static int %s[%d];\n",comment,count);
+               if(count>(64<<10))
+	       fprintf(fp,"static int *%s=NULL;//[%d];\n",comment,count);
+	       else fprintf(fp,"static int %s[%d];\n",comment,count);
                return;
            }
 	   fprintf(fp,"static int %s[]={\n",comment);
@@ -39,7 +41,9 @@ void print_array(FILE*fp,const char *comment,const float * data,int count)
 	   for( ;i<count;i++) if(data[i]!=0) break;
            if(i==count)
            {
-	       fprintf(fp,"static float %s[%d];\n",comment,count);
+               if(count>(64<<10))
+	       fprintf(fp,"static float *%s=NULL;//[%d];\n",comment,count);
+	       else fprintf(fp,"static float %s[%d];\n",comment,count);
                return;
            }
 	   fprintf(fp,"static float %s[]={\n",comment);
@@ -57,7 +61,9 @@ void print_array(FILE*fp,const char *comment,const double * data,int count)
 	   for( ;i<count;i++) if(data[i]!=0) break;
            if(i==count)
            {
-	       fprintf(fp,"static double %s[%d];\n",comment,count);
+               if(count>(64<<10))
+	       fprintf(fp,"static double *%s=NULL;//[%d];\n",comment,count);
+	       else fprintf(fp,"static double %s[%d];\n",comment,count);
                return;
            }
 	   fprintf(fp,"static double %s[]={\n",comment);
