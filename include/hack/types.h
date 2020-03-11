@@ -31,8 +31,16 @@ struct blob_int_def
     int *data;
     int *diff;
 };
+struct blob_double_def
+{
+    struct shape_def shape;
+    int count;
+    double *data;
+    double *diff;
+};
 struct blob_float_def
 {
+    struct shape_def shape;
     int count;
     float *data;
     float *diff;
