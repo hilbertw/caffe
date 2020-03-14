@@ -317,8 +317,8 @@ class Layer {
     param_propagate_down_[param_id] = value;
   }
 
-virtual void print_data(const std::string & name)const{printf("%s\n",name.c_str());}
-virtual void dump(FILE *fp)const{}
+virtual void print_data(const std::string & name)const{printf("print data:not implemented.(%s)\n",name.c_str());}
+virtual void dump(const std::string & name)const{printf("dump:not implemented.(%s)\n",name.c_str());}
 
  protected:
   /** The protobuf that stores the layer parameters */

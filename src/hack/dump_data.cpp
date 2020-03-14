@@ -61,7 +61,7 @@ template void dump_data_r<float>(FILE *fp,const char * comment,const google::pro
 #define P_FIELD(x) dump_data_int(fp,#x,data.x())
 #define P_FIELD_R(x) dump_data_r(fp,#x,data.x())
 
-void dump_data(FILE*fp,const char * comment,const caffe::ResizeParameter & data)
+void dump_data(FILE*fp,const char * comment,const caffe::ResizeParameter & data);
 {
 //height,width,resize_mode,height_scale,width_scale,pad_mode,pad_value,iterp_mode
    fprintf(fp,"%s={\n",comment);
@@ -162,11 +162,22 @@ void dump_data(FILE*fp,const char * comment,const std::map <int,std::string>&dat
 
 template<typename Dtype>  void dump_data(FILE*fp,const char * comment,const caffe::DataTransformer<Dtype> & data)
 {
+        fprintf(fp,"%s={\n",comment);
+        dump_data(fp,"param_",data.param_);
+        dump_data(fp,"data_mean_",data.data_mean_);
+        dump_data(fp,"mean_values_",data.mean_values_);
+        fprintf(fp,"}\n");
 }
 template<typename Dtype> void dump_data(FILE*fp,const char * comment,const boost::shared_ptr<caffe::DataTransformer<Dtype> >& data)
 {
-     const caffe::DataTransformer<Dtype> & d=*data;
-     dump_data(fp,comment,d);    
+     if(data)
+     {
+        const caffe::DataTransformer<Dtype> & d=*data;
+        dump_data(fp,comment,d);
+     } else
+     {
+        fprintf(fp,"%s={}\n",comment);
+     }   
 }
 
 template void dump_data<float>(FILE*fp,const char * comment,const caffe::DataTransformer<float> & data);
@@ -186,3 +197,32 @@ template void dump_data<int>(FILE*fp,const char * comment,std::vector<int >&data
 template void dump_data<float>(FILE*fp,const char * comment,std::vector<float>&data);
 template void dump_data<double>(FILE*fp,const char * comment,std::vector<double>&data);
 
+#define DUMP_FIELD(x) dump_data(fp,#x,data.x())
+void dump_data(FILE*fp,const char * comment,caffe::TransformationParameter data)
+{
+        fprintf(fp,"%s={\n",comment);
+    
+    P_FIELD(crop_h);
+    P_FIELD(crop_w);
+    DUMP_FIELD(crop_size);
+    DUMP_FIELD(distort_param);
+    DUMP_FIELD(emit_constraint);
+    DUMP_FIELD(force_color);
+    DUMP_FIELD(force_gray);
+    DUMP_FIELD(has_distort_param);
+    DUMP_FIELD(has_emit_constraint);
+    DUMP_FIELD(has_expand_param);
+    DUMP_FIELD(has_mean_file);
+    DUMP_FIELD(has_noise_param);
+    DUMP_FIELD(has_resize_param);
+    DUMP_FIELD(mean_value_size);
+    DUMP_FIELD(mirror);
+    DUMP_FIELD(noise_param);
+    DUMP_FIELD(scale);
+    DUMP_FIELD(resize_param);
+    DUMP_FIELD(expand_param);
+//resize_param().height
+//resize_param().width
+//expand_param().max_expand_ratio
+        fprintf(fp,"}\n");
+}
