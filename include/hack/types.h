@@ -23,6 +23,8 @@ struct blob_dtype_def
     int count;
     Dtype *data;
     Dtype *diff;
+    int data_flag;
+    int diff_flag;
 };
 struct blob_int_def
 {
@@ -30,6 +32,8 @@ struct blob_int_def
     int count;
     int *data;
     int *diff;
+    int data_flag;
+    int diff_flag;
 };
 struct blob_double_def
 {
@@ -37,6 +41,8 @@ struct blob_double_def
     int count;
     double *data;
     double *diff;
+    int data_flag;
+    int diff_flag;
 };
 struct blob_float_def
 {
@@ -44,6 +50,8 @@ struct blob_float_def
     int count;
     float *data;
     float *diff;
+    int data_flag;
+    int diff_flag;
 };
 struct transformer_param_def
 {

@@ -11,86 +11,109 @@ template<typename Dtype> void print_blob_dtype(FILE*fp,const char *  comment, co
 	  int shape_len=data.shape().size();
 	  fprintf(fp,"{\n{%d,%s_shape},%d,",shape_len,comment,data.count());
           if (data.data_)fprintf(fp," %s_data,",comment);else fprintf(fp,"NULL,"); 
-          if (data.diff_)fprintf(fp,"%s_diff",comment); 
-          fprintf(fp,"\n}");
+          if (data.diff_)fprintf(fp,"%s_diff,",comment);else fprintf(fp,"NULL,"); 
+          fprintf(fp,"%s_data_flag,%s_diff_flag\n}",comment,comment);
 }
 
-void print_array(FILE*fp,const char *comment,const int * data,int count)
+void print_array(FILE*fp,const char *comment,const int * data,int count,int flag)
 {
-	   int i=0;
-            
-	   for( ;i<count;i++) if(data[i]) break;
-           if(i==count)
-           {
-               if(count>(64<<10))
+	   int i;
+           if(flag>1)
 	       fprintf(fp,"static int *%s=NULL;//[%d];\n",comment,count);
-	       else fprintf(fp,"static int %s[%d];\n",comment,count);
-               return;
-           }
-	   fprintf(fp,"static int %s[]={\n",comment);
-	   for( i=0;i<count;i++)
-	   { 
-	      fprintf(fp,"%d,",data[i]);
-	      if((i%5)==4) fprintf(fp,"\n");
-	   }
-	   fprintf(fp,"%d\n};\n",data[i]);
-}
-void print_array(FILE*fp,const char *comment,const float * data,int count)
-{
-	   int i=0;
-	   for( ;i<count;i++) if(data[i]!=0) break;
-           if(i==count)
+           else if (flag==1)
            {
-               if(count>(64<<10))
+        	   fprintf(fp,"static int %s[]={\n",comment);
+        	   for( i=0;i<count;i++)
+        	   { 
+        	      fprintf(fp,"%d,",data[i]);
+        	      if((i%5)==4) fprintf(fp,"\n");
+        	   }
+        	   fprintf(fp,"\n};\n");
+           }
+}
+void print_array(FILE*fp,const char *comment,const float * data,int count,int flag)
+{
+	   int i;
+           if(flag>1)
 	       fprintf(fp,"static float *%s=NULL;//[%d];\n",comment,count);
-	       else fprintf(fp,"static float %s[%d];\n",comment,count);
-               return;
+           else if(flag==1)
+           {
+        	   fprintf(fp,"static float %s[]={\n",comment);
+        	   for( i=0;i<count;i++)
+        	   { 
+        	      fprintf(fp,"%lf,",data[i]);
+        	      if((i%5)==4) fprintf(fp,"\n");
+        	   }
+        	   fprintf(fp,"\n};\n");
            }
-	   fprintf(fp,"static float %s[]={\n",comment);
-	   for( i=0;i<count;i++)
-	   { 
-	      fprintf(fp,"%lf,",data[i]);
-	      if((i%5)==4) fprintf(fp,"\n");
-	   }
-	   fprintf(fp,"%lf\n};\n",data[i]);
 }
-	 
-void print_array(FILE*fp,const char *comment,const double * data,int count)
+void print_array(FILE*fp,const char *comment,const double * data,int count,int flag)
 {
-	   int i=0;
-	   for( ;i<count;i++) if(data[i]!=0) break;
+	   int i;
+           if(flag>1)
+	       fprintf(fp,"static double *%s=NULL;//[%d];\n",comment,count);
+           else if(flag==1)
+           {
+        	   fprintf(fp,"static double %s[]={\n",comment);
+        	   for( i=0;i<count;i++)
+        	   { 
+        	      fprintf(fp,"%lf,",data[i]);
+        	      if((i%5)==4) fprintf(fp,"\n");
+        	   }
+        	   fprintf(fp,"\n};\n");
+           }
+}
+template<typename Dtype>int check_array(FILE*fp,const char *comment,const Dtype * data,int count)
+{
+       int i;
+       int flag=0;
+       if(data)
+       { 
+	   for( i=0;i<count;i++) if(data[i]!=0) break;
            if(i==count)
            {
-               if(count>(64<<10))
-	       fprintf(fp,"static double *%s=NULL;//[%d];\n",comment,count);
-	       else fprintf(fp,"static double %s[%d];\n",comment,count);
-               return;
+               flag=3;
            }
-	   fprintf(fp,"static double %s[]={\n",comment);
-	   for( i=0;i<count;i++)
-	   { 
-	      fprintf(fp,"%lf,",data[i]);
-	      if((i%5)==4) fprintf(fp,"\n");
-	   }
-	   fprintf(fp,"%lf\n};\n",data[i]);
+           else {
+	       for( i=0;i<count;i++) if(data[i]!=1) break;
+               if(i==count) flag=2;
+               else flag=1;
+           }
+      }     
+      fprintf(fp,"#define %s_flag %d\n",comment,flag);
+      return flag;
 }
 template<typename Dtype> void print_blob_dtype_data(FILE*fp,const char *  comment,const caffe::Blob<Dtype>& data)
 {
-       if(data.data_){
-	  std::string s=comment+std::string("_data");
-	  print_array(fp,s.c_str(),data.cpu_data(),data.count());
-       }
-       if(data.diff_){
-	  std::string s=comment+std::string("_diff");
-	  print_array(fp,s.c_str(),data.cpu_diff(),data.count());
-        }  
+       std::string s=comment+std::string("_data");
+       
+       const Dtype * d=data.data_?data.cpu_data():NULL;
+       int flag=check_array(fp,s.c_str(),d,data.count());
+ 
+       print_array(fp,s.c_str(),d,data.count(),flag);
+       
+       
+       s=comment+std::string("_diff");
+
+       d=data.diff_?data.cpu_diff():NULL;
+       
+       flag=check_array(fp,s.c_str(),d,data.count());
+       print_array(fp,s.c_str(),d,data.count(),flag);
+          
 }
 
 template<typename Dtype> void print_blob_dtype_shape_data(FILE*fp,const char *  comment, const caffe::Blob<Dtype>&data)
 {
 	  std::string s=comment+std::string("_shape");
 	  const std::vector<int>& data_shape = data.shape();
-	  print_array(fp,s.c_str(),data_shape.data(),data_shape.size());
+          if(data_shape.size())
+          {
+	          print_array(fp,s.c_str(),data_shape.data(),data_shape.size(),1);
+          }
+          else
+          {
+                  fprintf(fp," static int %s[1];\n",s.c_str());
+          }
 }
 
 
@@ -102,7 +125,7 @@ template<typename Dtype> void print_vector_dtype(FILE*fp,const char *  comment, 
 template<typename Dtype> void print_vector_dtype_data(FILE*fp,const char *  comment, const std::vector<Dtype>&data)
 {
 	  std::string s=comment+std::string("_data");
-	  print_array(fp,s.c_str(),data.data(),data.size());
+	  print_array(fp,s.c_str(),data.data(),data.size(),1);
 }
 
 #if 0
@@ -111,7 +134,7 @@ template<typename Dtype> void print_vector_dtype_data(FILE*fp,const char *  comm
 	    int mean_size;
 	    float * mean_value;
 	   std::string s=comment+std::string("_param_mean_value");
-	   print_array(fp,s.c_str(),mean_value,mean_size);
+	   print_array(fp,s.c_str(),mean_value,mean_size,1);
 	}
 
 	void print_transformer_param(FILE*fp,const char *  comment, const caffe::TransformationParameter&data)
@@ -144,7 +167,7 @@ template<typename Dtype> void print_transformer_data(FILE*fp,const char *  comme
 	   print_blob_dtype_data(fp,s.c_str(),data.data_mean_);
 	   
 	   s=comment+std::string("_mean_values");
-	   print_array(fp,s.c_str(),data.mean_values_.data(),data.mean_values_.size());   
+	   print_array(fp,s.c_str(),data.mean_values_.data(),data.mean_values_.size(),1);   
 }
 template<typename Dtype> void print_transformer(FILE*fp,const char *  comment, const caffe::DataTransformer<Dtype>&data)
 {

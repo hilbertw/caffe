@@ -319,7 +319,7 @@ class Layer {
 
 virtual void print_data(const std::string & name)const{printf("print data:not implemented.(%s)\n",name.c_str());}
 virtual void dump(const std::string & name)const{printf("dump:not implemented.(%s)\n",name.c_str());}
-
+void print_blobs( const std::string & name) const { ::print_blobs(name,blobs_);}
  protected:
   /** The protobuf that stores the layer parameters */
   LayerParameter layer_param_;

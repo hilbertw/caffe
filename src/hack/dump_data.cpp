@@ -202,6 +202,8 @@ void dump_data(FILE*fp, const char * comment, const caffe::SaltPepperParameter&d
 void dump_data(FILE*fp, const char *comment, const caffe::EmitConstraint& data)
 {
         fprintf(fp,"%s={\n",comment);
+   DUMP_FIELD(emit_type);
+   DUMP_FIELD(emit_overlap);
         fprintf(fp,"}\n");
 }
 void dump_data(FILE*fp, const char *comment, const caffe::NoiseParameter&data)
@@ -245,6 +247,7 @@ void dump_data(FILE*fp, const char *comment, const caffe::ExpansionParameter& da
 {
         fprintf(fp,"%s={\n",comment);
         DUMP_FIELD(max_expand_ratio);
+        DUMP_FIELD(prob);
         fprintf(fp,"}\n");
 }
 
