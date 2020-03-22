@@ -13,6 +13,7 @@ template<typename Dtype> void print_blob_dtype(FILE*fp,const char *  comment, co
           if (data.data_)fprintf(fp," %s_data,",comment);else fprintf(fp,"NULL,"); 
           if (data.diff_)fprintf(fp,"%s_diff,",comment);else fprintf(fp,"NULL,"); 
           fprintf(fp,"%s_data_flag,%s_diff_flag\n}",comment,comment);
+          
 }
 
 void print_array(FILE*fp,const char *comment,const int * data,int count,int flag)
@@ -175,7 +176,7 @@ template<typename Dtype> void print_transformer(FILE*fp,const char *  comment, c
 	    
 	    //transformer_param_def param;
 	    //print_transformer_param(fp,comment,data.param);
-	    //fprintf(fp,",\n");
+	    fprintf(fp,"%d,\n",data.phase_);
 	    //blob_dtype_def<Dtype> data_mean_;
 	    std::string s=comment+std::string("_data_mean");
 	    print_blob_dtype(fp,s.c_str(),data.data_mean_);

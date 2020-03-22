@@ -26,6 +26,7 @@ struct blob_dtype_def
     int data_flag;
     int diff_flag;
 };
+#if 0
 struct blob_int_def
 {
     struct shape_def shape;
@@ -53,6 +54,11 @@ struct blob_float_def
     int data_flag;
     int diff_flag;
 };
+#else
+typedef  struct blob_dtype_def<int> blob_int_def; 
+typedef  struct blob_dtype_def<float> blob_float_def; 
+typedef  struct blob_dtype_def<double> blob_double_def; 
+#endif
 struct transformer_param_def
 {
     int mean_size;
@@ -67,6 +73,7 @@ struct transformer_param_def
 template<typename Dtype>
 struct data_transformer_def
 {
+    int phase;
 //    transformer_param_def param;
     blob_dtype_def<Dtype> data_mean_;
     vector_dtype_def<Dtype> mean_values;
@@ -81,6 +88,7 @@ struct map_int_string_def
     int count;
     struct int_string_pair  *data;
 };
+#if 0
 struct vector_float_def
 {
     int count;
@@ -91,6 +99,11 @@ struct vector_int_def
     int count;
     int *data;
 };
+#else
+
+typedef struct vector_dtype_def<int> vector_int_def;
+typedef struct vector_dtype_def<float> vector_float_def;
+#endif
 struct vector_int_ptr_def
 {
     int count;
@@ -113,8 +126,8 @@ struct vector_string_def
 };
 
 #define P_FIELD(x) int x
-#define P_FIELD_R(x) struct vector_int_def x
-#define P_FIELD_R_F(x) struct vector_float_def x
+#define P_FIELD_R(x)  vector_int_def x
+#define P_FIELD_R_F(x)  vector_float_def x
 
 struct resize_param_def
 {
