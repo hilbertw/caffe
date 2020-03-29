@@ -95,17 +95,17 @@ template <typename Dtype>void dump_array(FILE*fp,const char *  comment,const Dty
 
 template <typename Dtype>void dump_data(FILE*fp,const char * comment,const caffe::Blob<Dtype>& data)
 {
+  fprintf(fp,"%s={\n",comment);
+  fprintf(fp,"count=%d\n",data.count());
+  fprintf(fp,"shape=%s\n",data.shape_string().c_str());
   if(data.data_){  
-        fprintf(fp,"%s_data\n",comment);
-        fprintf(fp,"count=%d\n",data.count());
         dump_array(fp,"data",data.cpu_data(),data.count());
         fprintf(fp,"\n");   
   }
   if(data.diff_){  
-        fprintf(fp,"%s_diff\n",comment);
-   dump_array(fp,"diff",data.cpu_diff(),data.count());   
-   fprintf(fp,"\n}");
+       dump_array(fp,"diff",data.cpu_diff(),data.count());   
   }
+  fprintf(fp,"\n}");
 }
 
 
