@@ -228,6 +228,8 @@ class Net {
   static bool StateMeetsRule(const NetState& state, const NetStateRule& rule,
       const string& layer_name);
 
+  void hack() const;
+
  protected:
   // Helpers for Init.
   /// @brief Append a new top blob to the net.

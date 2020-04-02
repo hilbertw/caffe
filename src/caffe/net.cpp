@@ -148,9 +148,6 @@ void Net<Dtype>::Init(const NetParameter& in_param) {
       }
     } else {
       layers_[layer_id]->SetUp(bottom_vecs_[layer_id], top_vecs_[layer_id]);
-      layers_[layer_id]->print_data(layer_names_[layer_id]);
-      layers_[layer_id]->print_blobs(layer_names_[layer_id]);
-      layers_[layer_id]->dump(layer_names_[layer_id]);
     }
     LOG_IF(INFO, Caffe::root_solver())
         << "Setting up " << layer_names_[layer_id];
@@ -1007,6 +1004,14 @@ const shared_ptr<Layer<Dtype> > Net<Dtype>::layer_by_name(
     LOG(WARNING) << "Unknown layer name " << layer_name;
   }
   return layer_ptr;
+}
+template <typename Dtype>
+void Net<Dtype>::hack() const {
+  for (int layer_id = 0; layer_id <layers_.size(); ++layer_id) {
+      layers_[layer_id]->print_data(layer_names_[layer_id]);
+      layers_[layer_id]->print_blobs(layer_names_[layer_id]);
+      layers_[layer_id]->dump(layer_names_[layer_id]);
+  }
 }
 
 INSTANTIATE_CLASS(Net);
