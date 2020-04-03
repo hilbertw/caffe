@@ -9,7 +9,13 @@
 template<typename Dtype> void print_blob_dtype(FILE*fp,const char *  comment, const caffe::Blob<Dtype>& data)
 {
 	  int shape_len=data.shape().size();
-	  fprintf(fp,"{\n{%d,%s_shape},%d,",shape_len,comment,data.count());
+	  fprintf(fp,"{\n{%d,",shape_len);
+          if(shape_len)
+	       fprintf(fp,"%s_shape",comment);
+	  else 
+               fprintf(fp,"NULL");
+
+	  fprintf(fp,"},%d,",data.count());
           if (data.data_)fprintf(fp," %s_data,",comment);else fprintf(fp,"NULL,"); 
           if (data.diff_)fprintf(fp,"%s_diff,",comment);else fprintf(fp,"NULL,"); 
           fprintf(fp,"%s_data_flag,%s_diff_flag\n}",comment,comment);
@@ -105,15 +111,11 @@ template<typename Dtype> void print_blob_dtype_data(FILE*fp,const char *  commen
 
 template<typename Dtype> void print_blob_dtype_shape_data(FILE*fp,const char *  comment, const caffe::Blob<Dtype>&data)
 {
-	  std::string s=comment+std::string("_shape");
 	  const std::vector<int>& data_shape = data.shape();
           if(data_shape.size())
           {
+	          std::string s=comment+std::string("_shape");
 	          print_array(fp,s.c_str(),data_shape.data(),data_shape.size(),1);
-          }
-          else
-          {
-                  fprintf(fp," static int %s[1];\n",s.c_str());
           }
 }
 
