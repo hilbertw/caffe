@@ -59,6 +59,15 @@ void print_blobs(FILE*fp,const  std::string & title,const std::vector<caffe::Blo
   	     print_blob(fp,b);
   } 	  
 }
+template <typename DType>
+void print_blobs(FILE*fp,const  std::string & title,const std::vector<caffe::shared_ptr<caffe::Blob<DType> > > & blobs)
+{
+  fprintf(fp,"\n%s\nblobs:%d\n",title.c_str(),blobs.size());
+  for( auto const & b: blobs)
+  {
+  	     print_blob(fp,b.get());
+  } 	  
+}
 void print_s(FILE *fp,const std::string & s)
 {
     fprintf(fp,"%s\n",s.c_str());
@@ -71,6 +80,9 @@ void print_s(FILE *fp,const char * s)
 template void print_blobs(FILE*fp,const  std::string & title,const std::vector<caffe::Blob<int>*> & blobs) ;
 template void print_blobs(FILE*fp,const  std::string & title,const std::vector<caffe::Blob<float>*> & blobs) ;
 template void print_blobs(FILE*fp,const  std::string & title,const std::vector<caffe::Blob<double>*> & blobs) ;
+template void print_blobs(FILE * fp,const  std::string & title,const std::vector<caffe::shared_ptr < caffe::Blob<int> > > & blobs) ;
+template void print_blobs(FILE * fp,const  std::string & title,const std::vector<caffe::shared_ptr < caffe::Blob<float> > > & blobs) ;
+template void print_blobs(FILE * fp,const  std::string & title,const std::vector<caffe::shared_ptr < caffe::Blob<double> > > & blobs) ;
 template void print_blob(FILE*fp,const caffe::Blob<float> * b);
 template void print_blob(FILE*fp,const caffe::Blob<double> * b);
 

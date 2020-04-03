@@ -548,10 +548,10 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end) {
   CHECK_GE(start, 0);
   CHECK_LT(end, layers_.size());
   Dtype loss = 0;
-BEGIN_DEBUG
   for (int i = start; i <= end; ++i) {
+BEGIN_DEBUG(layer_names_[i])
     // LOG(ERROR) << "Forwarding " << layer_names_[i];
-    debug::print_s(fp,layer_names_[i]);
+    debug::print_blobs(fp,"blobs_",layers_[i]->blobs());
     
     debug::print_blobs(fp,"bottom_vecs_",bottom_vecs_[i]);
     
@@ -561,8 +561,8 @@ BEGIN_DEBUG
     debug::print_blobs(fp,"top_vecs_ after:",top_vecs_[i]);
     loss += layer_loss;
     if (debug_info_) { ForwardDebugInfo(i); }
-  }
 END_DEBUG
+  }
   return loss;
 }
 
